@@ -1,9 +1,11 @@
 spawning = require("spawner")
+extShape = require("extensionShape")
 
 module.exports.loop = function()
 {
-    foreach(spawn in Game.spawns)
+    for(spawnName in Game.spawns)
     {
-        print(spawn)
+        spawner = Game.spawns[spawnName]
+        spawning.spawn(spawner)
     }
 }
