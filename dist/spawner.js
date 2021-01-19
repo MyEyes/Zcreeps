@@ -1,12 +1,21 @@
 accounting = require("accounting")
+roles = require("roles")
+
 spawner = 
 {
     spawn: function(spawner)
     {
-        if(spawner.room.energyAvailable >= 300 && Object.keys(Game.creeps).length<10)
+        for(roleName in roles)
         {
-            spawner.spawnCreep([WORK,CARRY,CARRY,MOVE,MOVE], Game.time, {memory:{home: spawner.room.name, role: "worker"}})
-            accounting.addCreepToRole(spawner.room.name, "worker")
+            roleInfo = accounting.getRoleInfo(spawner.room.name, roleName)
+            if(roleInfo.needed > roleInfo.alive)
+            {
+                role = roles[roleName]
+                if (spawner.spawnCreep(role.body(spawner.room), Game.time, {memory:{home: spawner.room.name, role: roleName}}) == OK)
+                {
+                    accounting.addCreepToRole(spawner.room.name, roleName)
+                }
+            }
         }
     }
 }

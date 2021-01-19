@@ -42,6 +42,20 @@ module.exports = {
         return true;
     },
 
+    getRoleInfo: function(roomName, roleName)
+    {
+        roomData.checkGlobalInit()
+        if (!this.initRoleAccounting(roomName, roleName))
+        {
+            console.log("Couldn't init accounting for "+roomName)
+            return false;
+        }
+        return {
+            needed: Memory.rooms[roomName].accounting.roles.needed[roleName],
+            alive: Memory.rooms[roomName].accounting.roles.alive[roleName]
+        }
+    },
+
     addCreepToRole: function(roomName, roleName)
     {
         roomData.checkGlobalInit()
@@ -85,7 +99,19 @@ module.exports = {
         if((Game.time % 1000) == 0)
         {
             Memory.rooms[roomName].accounting.energy.maxLast1000 = Memory.rooms[roomName].accounting.energy.maxCounter
+            Memory.rooms[roomName].accounting.energy.maxCounter = 0
         }
+    },
+    getRecentMaxEnergy: function(roomName)
+    {
+        roomData.checkGlobalInit()
+        if (!this.checkRoomAccountingInit(roomName))
+        {
+            console.log("Couldn't init accounting for "+roomName)
+            return false;
+        }
+        room = Game.rooms[roomName]
+        return Memory.rooms[roomName].accounting.energy.maxLast1000
     },
 
     run: function()

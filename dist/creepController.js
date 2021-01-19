@@ -9,9 +9,10 @@ module.exports=
         {
             creepData = Memory.creeps[creepName]
             creep = Game.creeps[creepName]
-            if(!creep)
+            if(!creep && creepData)
             {
                 accounting.removeCreepFromRole(creepData.home, creepData.role)
+                Memory.creeps[creepName] = undefined
             }
             else
             {
@@ -21,6 +22,7 @@ module.exports=
     },
     runCreep: function(creep)
     {
-        roles[creep.memory.role].run(creep)
+        if(creep && creep.memory)
+            roles[creep.memory.role].run(creep)
     }
 }
