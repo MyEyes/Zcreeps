@@ -8,7 +8,7 @@ module.exports = {
         }
         return [WORK,CARRY,CARRY,MOVE,MOVE]
     },
-    run: function()
+    run: function(creep)
     {
         if(!creep.memory.delivering)
         {

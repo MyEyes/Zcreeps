@@ -42,6 +42,17 @@ module.exports = {
         return true;
     },
 
+    setRoleNeeded: function(roomName, roleName, count)
+    {
+        roomData.checkGlobalInit()
+        if (!this.initRoleAccounting(roomName, roleName))
+        {
+            console.log("Couldn't init accounting for "+roomName)
+            return false;
+        }
+        Memory.rooms[roomName].accounting.roles.needed[roleName] = count
+    },
+
     getRoleInfo: function(roomName, roleName)
     {
         roomData.checkGlobalInit()

@@ -14,7 +14,7 @@ module.exports=
                 accounting.removeCreepFromRole(creepData.home, creepData.role)
                 Memory.creeps[creepName] = undefined
             }
-            else
+            else if(creep && !creep.spawning)
             {
                 this.runCreep(creep)
             }

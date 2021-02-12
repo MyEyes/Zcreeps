@@ -1,3 +1,4 @@
+const util = require("util")
 room = {
     checkGlobalInit: function()
     {
@@ -36,19 +37,15 @@ room = {
                 spots:[],
                 miningSpot:{}
             }
+            spots = util.getFreeSpotsAround(source.pos)
             console.log(source)
-            for(x=-1; x<=1; x++){
-                for(y=-1; y<=1; y++)
-                {
-                    if(!terrain.get(x+source.pos.x,y+source.pos.y))
-                    {
-                        spotData.spots.push(
-                            {'x':x+source.pos.x,
-                            'y':y+source.pos.y,
-                            'worker':null}
-                            )
-                    }
-                }
+            for(spot in spots)
+            {
+                spotData.spots.push(
+                    {'x':x+spot.x,
+                    'y':y+spot.y,
+                    'worker':null}
+                    )
             }
             data.sources[source.id] = spotData
         }
