@@ -29,6 +29,8 @@ module.exports = {
         }
         else
         {
+            if(room.find(FIND_MY_SPAWNS).length > 0)
+            {
                 numSpots = 0
                 for(source in Memory.rooms[roomName].sources)
                 {
@@ -41,6 +43,22 @@ module.exports = {
                 accounting.setRoleNeeded(roomName, "hauler", 0)
                 accounting.setRoleNeeded(roomName, "upgrader", 0)
                 accounting.setRoleNeeded(roomName, "scout", 0)
+            }
+            else
+            {
+                numSpots = 0
+                for(source in Memory.rooms[roomName].sources)
+                {
+                    numSpots += Memory.rooms[roomName].sources[source].spots.length
+                }
+                accounting.setRoleNeeded(roomName, "worker", 0)
+                accounting.setRoleNeeded(roomName, "extSupplier", 0)
+                accounting.setRoleNeeded(roomName, "supplier", 0)
+                accounting.setRoleNeeded(roomName, "miner", 0)
+                accounting.setRoleNeeded(roomName, "hauler", 0)
+                accounting.setRoleNeeded(roomName, "upgrader", 0)
+                accounting.setRoleNeeded(roomName, "scout", 0)
+            }
         }
     }
 }

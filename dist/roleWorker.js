@@ -10,6 +10,11 @@ module.exports = {
     },
     run: function(creep)
     {
+        if(creep.pos.roomName != creep.memory.home)
+        {
+            creep.moveTo(new RoomPosition(25,25, creep.memory.home))
+            return
+        }
         if(!creep.memory.delivering)
         {
             const target = creep.pos.findClosestByRange(FIND_SOURCES_ACTIVE);

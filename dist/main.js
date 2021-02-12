@@ -6,6 +6,7 @@ extensionShape = require("extensionShape")
 turrets = require("turrets")
 manager = require("creepManager")
 scouting = require("scouting")
+expansion = require("expansion")
 
 module.exports.loop = function()
 {
@@ -13,7 +14,9 @@ module.exports.loop = function()
     turrets.run()
     manager.run()
     scouting.run()
+    expansion.run()
     //extensionShape.drawShape(Game.rooms["W2S1"],9,11)
+    //expand to W4N1
 
     for(spawnName in Game.spawns)
     {

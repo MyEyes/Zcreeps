@@ -1,4 +1,5 @@
 const mining = require("mining")
+const expansion = require("expansion")
 module.exports = {
     run: function()
     {
@@ -47,6 +48,11 @@ module.exports = {
         {
             Memory.rooms[hostRoom].scouting[scoutRoom].checkedMines = true
             mining.createRoomMiningSpots(hostRoom, scoutRoom)
+        }
+        room = Game.rooms[scoutRoom]
+        if(room && room.controller)
+        {
+            expansion.markRoomForReserve(hostRoom, scoutRoom)
         }
     },
     findScoutingTarget: function(hostRoom)
