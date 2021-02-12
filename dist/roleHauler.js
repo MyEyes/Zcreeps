@@ -26,7 +26,6 @@ module.exports = {
             container = Game.getObjectById(spotInfo.containerID)
             if(!container)
             {
-                creep.moveTo(targetPos)
                 return
             }
             result = creep.withdraw(container, RESOURCE_ENERGY)

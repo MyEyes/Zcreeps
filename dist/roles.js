@@ -5,6 +5,7 @@ minerRole = require("roleMiner")
 haulerRole = require("roleHauler")
 upgraderRole = require("roleUpgrader")
 supplierRole = require("roleSupplier")
+scoutRole = require("roleScout")
 module.exports = {
     'worker': workerRole,
     'builder': builderRole,
@@ -12,5 +13,6 @@ module.exports = {
     'miner': minerRole,
     'hauler': haulerRole,
     'upgrader': upgraderRole,
-    'supplier': supplierRole
+    'supplier': supplierRole,
+    'scout': scoutRole
 }

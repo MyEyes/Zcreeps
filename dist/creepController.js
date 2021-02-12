@@ -16,7 +16,11 @@ module.exports=
             }
             else if(creep && !creep.spawning)
             {
-                this.runCreep(creep)
+                try {
+                    this.runCreep(creep)   
+                } catch (error) {
+                    creep.say("OH NO")
+                }
             }
         }
     },

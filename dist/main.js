@@ -5,13 +5,15 @@ accounting = require("accounting")
 extensionShape = require("extensionShape")
 turrets = require("turrets")
 manager = require("creepManager")
+scouting = require("scouting")
 
 module.exports.loop = function()
 {
     accounting.run()
     turrets.run()
     manager.run()
-    //extensionShape.drawShape(Game.rooms["E2N1"],9,11)
+    scouting.run()
+    //extensionShape.drawShape(Game.rooms["W2S1"],9,11)
 
     for(spawnName in Game.spawns)
     {

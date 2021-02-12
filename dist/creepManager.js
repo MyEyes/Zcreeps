@@ -2,7 +2,7 @@ accounting = require("accounting")
 module.exports = {
     run: function()
     {
-        if(((Game.time-200) % 1000) < 1)
+        if(((Game.time-50) % 1000) < 1)
         {
             for(roomName in Memory.rooms)
             {
@@ -20,6 +20,7 @@ module.exports = {
                 accounting.setRoleNeeded(roomName, "worker", 0)
                 accounting.setRoleNeeded(roomName, "extSupplier", 1)
                 accounting.setRoleNeeded(roomName, "supplier", 1)
+                accounting.setRoleNeeded(roomName, "scout", 1)
                 numSpots = Object.keys(Memory.rooms[roomName].miningSpots).length
                 accounting.setRoleNeeded(roomName, "miner", numSpots)
                 accounting.setRoleNeeded(roomName, "hauler", numSpots)
@@ -39,6 +40,7 @@ module.exports = {
                 accounting.setRoleNeeded(roomName, "miner", 0)
                 accounting.setRoleNeeded(roomName, "hauler", 0)
                 accounting.setRoleNeeded(roomName, "upgrader", 0)
+                accounting.setRoleNeeded(roomName, "scout", 0)
         }
     }
 }

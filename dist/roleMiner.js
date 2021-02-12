@@ -1,5 +1,5 @@
 accounting = require("accounting")
-mining = require("mining")
+const mining = require("mining")
 module.exports = {
     body: function(room)
     {

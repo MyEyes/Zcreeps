@@ -12,13 +12,13 @@ module.exports = {
 
     createRoomMiningSpots: function(hostRoomName, roomName)
     {
-        room = Game.rooms[roomName]
-        if(!room)
+        roomO = Game.rooms[roomName]
+        if(!roomO)
         {
             console.log("Couldn't access info for room "+roomName)
             return
         }
-        sources = room.find(FIND_SOURCES)
+        sources = roomO.find(FIND_SOURCES)
         for(sourceIdx in sources)
         {
             source = sources[sourceIdx]
@@ -35,12 +35,23 @@ module.exports = {
 
         source = Game.getObjectById(sourceID)
 
+        if(Memory.rooms[hostRoomName].miningSpots[sourceID])
+        {
+            return
+        }
+
         freeSpots = util.getFreeSpotsAround(source.pos)
         if(!roomO.storage)
         {
             console.log("Can't set up mining spots until storage exists in host room")
+            return
         }
         closest = roomO.storage.pos.findClosestByRange(freeSpots)
+        if(!closest)
+        {
+            console.log("Couldn't determine closest position, using random")
+            closest = freeSpots[0]
+        }
 
         miningSpotInfo = {
             sourceID: sourceID,
