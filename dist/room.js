@@ -55,6 +55,11 @@ room = {
     {
         for(sourceIdx in Memory.rooms[roomName].sources)
         {
+            source = Game.getObjectById(sourceIdx)
+            if(!source || source.energy == 0)
+            {
+                continue;
+            }
             sourceData = Memory.rooms[roomName].sources[sourceIdx]
             for(spotId in sourceData.spots)
             {

@@ -19,7 +19,7 @@ module.exports=
                 try {
                     this.runCreep(creep)   
                 } catch (error) {
-                    //throw(error)
+                    throw(error)
                     creep.say("OH NO")
                 }
             }

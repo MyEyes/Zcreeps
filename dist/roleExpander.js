@@ -22,9 +22,9 @@ module.exports = {
         else
         {
             room = Game.rooms[creep.memory.targetRoom]
-            if(!room)
+            targetPos = new RoomPosition(25,25,creep.memory.targetRoom)
+            if(!room || creep.pos.x<2 || creep.pos.y <2 || creep.pos.x>47 || creep.pos.y>47)
             {
-                targetPos = new RoomPosition(25,25,creep.memory.targetRoom)
                 creep.moveTo(targetPos)
             }
             else

@@ -3,7 +3,7 @@ const room = require("room")
 module.exports = {
     body: function(roomO)
     {
-        if(accounting.getRecentMaxEnergy(roomO.name) > 600)
+        if(accounting.getRecentMaxEnergy(roomO.name) >= 600)
         {
             return [WORK,CARRY,CARRY,MOVE,MOVE, WORK,CARRY,CARRY,MOVE,MOVE]
         }
@@ -21,10 +21,13 @@ module.exports = {
             if(!creep.memory.targetSourceId)
             {
                 spotData = room.getFreeSource(creep.memory.home)
-                if(room.acquireSourceSpot(creep.memory.home, spotData.sourceId, spotData.spotId, creep.name))
+                if(spotData)
                 {
-                    creep.memory.targetSourceId = spotData.sourceId
-                    creep.memory.targetSpotId = spotData.spotId
+                    if(room.acquireSourceSpot(creep.memory.home, spotData.sourceId, spotData.spotId, creep.name))
+                    {
+                        creep.memory.targetSourceId = spotData.sourceId
+                        creep.memory.targetSpotId = spotData.spotId
+                    }
                 }
             }
             else
@@ -39,9 +42,10 @@ module.exports = {
                     }
                 }
                 
-                if(creep.store[RESOURCE_ENERGY] >= creep.store.getCapacity())
+                if(creep.store[RESOURCE_ENERGY] >= creep.store.getCapacity() || !target || target.energy == 0)
                 {
                     creep.memory.delivering = true
+                    room.freeSourceSpot(creep.memory.home, creep.memory.targetSourceId, creep.memory.targetSpotId, creep.name)
                     creep.memory.targetSourceId = undefined
                     creep.memory.targetSpotId = undefined
                 }
