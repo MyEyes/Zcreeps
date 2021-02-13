@@ -15,7 +15,7 @@ module.exports.loop = function()
     manager.run()
     scouting.run()
     expansion.run()
-    //extensionShape.drawShape(Game.rooms["W2S1"],9,11)
+    //extensionShape.drawShape(Game.rooms["W4N1"],35,7)
     //expand to W4N1
 
     for(spawnName in Game.spawns)

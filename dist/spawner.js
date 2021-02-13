@@ -20,16 +20,19 @@ spawner =
             }
         }
         surrogateRoom = expansion.getSurrogateRoom(spawner.room.name)
-        for(roleName in roles)
+        if(surrogateRoom)
         {
-            roleInfo = accounting.getRoleInfo(surrogateRoom, roleName)
-            if(roleInfo.needed > roleInfo.alive)
+            for(roleName in roles)
             {
-                role = roles[roleName]
-                if (spawner.spawnCreep(role.body(spawner.room), Game.time, {memory:{home: surrogateRoom, role: roleName}}) == OK)
+                roleInfo = accounting.getRoleInfo(surrogateRoom, roleName)
+                if(roleInfo.needed > roleInfo.alive)
                 {
-                    accounting.addCreepToRole(surrogateRoom, roleName)
-                    return
+                    role = roles[roleName]
+                    if (spawner.spawnCreep(role.body(spawner.room), Game.time, {memory:{home: surrogateRoom, role: roleName}}) == OK)
+                    {
+                        accounting.addCreepToRole(surrogateRoom, roleName)
+                        return
+                    }
                 }
             }
         }

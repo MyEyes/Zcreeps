@@ -1,8 +1,9 @@
 accounting = require("accounting")
+const room = require("room")
 module.exports = {
-    body: function(room)
+    body: function(roomO)
     {
-        if(accounting.getRecentMaxEnergy(room.name) > 600)
+        if(accounting.getRecentMaxEnergy(roomO.name) > 600)
         {
             return [WORK,CARRY,CARRY,MOVE,MOVE, WORK,CARRY,CARRY,MOVE,MOVE]
         }
@@ -17,18 +18,33 @@ module.exports = {
         }
         if(!creep.memory.delivering)
         {
-            const target = creep.pos.findClosestByRange(FIND_SOURCES_ACTIVE);
-            if(target)
+            if(!creep.memory.targetSourceId)
             {
-                if(creep.harvest(target) == ERR_NOT_IN_RANGE)
+                spotData = room.getFreeSource(creep.memory.home)
+                if(room.acquireSourceSpot(creep.memory.home, spotData.sourceId, spotData.spotId, creep.name))
                 {
-                    creep.moveTo(target);
+                    creep.memory.targetSourceId = spotData.sourceId
+                    creep.memory.targetSpotId = spotData.spotId
                 }
             }
-            
-            if(creep.store[RESOURCE_ENERGY] >= creep.store.getCapacity())
+            else
             {
-                creep.memory.delivering = true
+                spot = room.getSpotData(creep.memory.home, creep.memory.targetSourceId, creep.memory.targetSpotId)
+                const target = Game.getObjectById(creep.memory.targetSourceId)
+                if(target)
+                {
+                    if(creep.harvest(target) == ERR_NOT_IN_RANGE)
+                    {
+                        creep.moveTo(new RoomPosition(spot.x, spot.y, creep.memory.home));
+                    }
+                }
+                
+                if(creep.store[RESOURCE_ENERGY] >= creep.store.getCapacity())
+                {
+                    creep.memory.delivering = true
+                    creep.memory.targetSourceId = undefined
+                    creep.memory.targetSpotId = undefined
+                }
             }
         }
         else
