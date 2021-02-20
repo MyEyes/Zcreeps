@@ -36,9 +36,10 @@ module.exports = {
                 const target = Game.getObjectById(creep.memory.targetSourceId)
                 if(target)
                 {
+                    creep.moveTo(new RoomPosition(spot.x, spot.y, creep.memory.home));
                     if(creep.harvest(target) == ERR_NOT_IN_RANGE)
                     {
-                        creep.moveTo(new RoomPosition(spot.x, spot.y, creep.memory.home));
+                        
                     }
                 }
                 
@@ -53,7 +54,19 @@ module.exports = {
         }
         else
         {
-            const target = creep.pos.findClosestByRange(FIND_MY_SPAWNS);
+            target = creep.pos.findClosestByRange(FIND_MY_SPAWNS, {
+                filter: function(structure) {
+                    return ((structure.store.getFreeCapacity(RESOURCE_ENERGY) > 0))
+                     }
+            });
+            if(!target)
+            {
+                target = creep.pos.findClosestByRange(FIND_MY_STRUCTURES, {
+                    filter: function(structure) {
+                        return ((structure.structureType == STRUCTURE_EXTENSION && structure.store.getFreeCapacity(RESOURCE_ENERGY) > 0))
+                         }
+                });
+            }
             if(target && target.store.getFreeCapacity(RESOURCE_ENERGY) > 0)
             {
                 if(creep.transfer(target, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE)

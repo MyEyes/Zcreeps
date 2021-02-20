@@ -35,6 +35,12 @@ module.exports = {
 
         source = Game.getObjectById(sourceID)
 
+        //Don't register mining spots in rooms owned by somebody else
+        if(!roomO.controller || (!roomO.controller.my && roomO.controller.owner))
+        {
+            return
+        }
+
         if(Memory.rooms[hostRoomName].miningSpots[sourceID])
         {
             return
@@ -72,13 +78,14 @@ module.exports = {
     getSpotInfo: function(hostRoomName, spotId)
     {
         this.initRoomMining(hostRoomName)
-        return Memory.rooms[hostRoomName].miningSpots[spotId]
+        result = Memory.rooms[hostRoomName].miningSpots[spotId]
+        return result
     },
 
     acquireMiningSpot: function(hostRoomName, spotId, creepID)
     {
         this.initRoomMining(hostRoomName)
-        spotInfo = Memory.rooms[hostRoomName].miningSpots[spotId]
+        var spotInfo = Memory.rooms[hostRoomName].miningSpots[spotId]
         if(spotInfo.minerCreep == creepID)
         {
             return true
@@ -96,7 +103,7 @@ module.exports = {
         this.initRoomMining(hostRoomName)
         for(spotId in Memory.rooms[hostRoomName].miningSpots)
         {
-            spotInfo = Memory.rooms[hostRoomName].miningSpots[spotId]
+            var spotInfo = Memory.rooms[hostRoomName].miningSpots[spotId]
             creep = Game.creeps[spotInfo.minerCreep]
             if(!creep)
             {
@@ -113,7 +120,7 @@ module.exports = {
     acquireHaulingSpot: function(hostRoomName, spotId, creepId)
     {
         this.initRoomMining(hostRoomName)
-        spotInfo = Memory.rooms[hostRoomName].miningSpots[spotId]
+        var spotInfo = Memory.rooms[hostRoomName].miningSpots[spotId]
         if(spotInfo.haulerCreep == creepId)
         {
             return true
@@ -131,7 +138,7 @@ module.exports = {
         this.initRoomMining(hostRoomName)
         for(spotId in Memory.rooms[hostRoomName].miningSpots)
         {
-            spotInfo = Memory.rooms[hostRoomName].miningSpots[spotId]
+            var spotInfo = Memory.rooms[hostRoomName].miningSpots[spotId]
             creep = Game.creeps[spotInfo.haulerCreep]
             if(!creep)
             {

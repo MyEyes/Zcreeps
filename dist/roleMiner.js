@@ -10,15 +10,19 @@ module.exports = {
         if(!creep.memory.spot)
         {
             spot = mining.getFreeMiningSpot(creep.memory.home)
-            if(mining.acquireMiningSpot(creep.memory.home, spot, creep.name))
+            if(spot && mining.acquireMiningSpot(creep.memory.home, spot, creep.name))
             {
                 creep.memory.spot = spot
-                return
             }
+            return
         }
         else
         {
-            spotInfo = mining.getSpotInfo(creep.memory.home, creep.memory.spot)
+            var spotInfo = mining.getSpotInfo(creep.memory.home, creep.memory.spot)
+            if(!spotInfo)
+            {
+                return
+            }
             containerPos = new RoomPosition(spotInfo.containerPos.x, spotInfo.containerPos.y, spotInfo.containerPos.roomName)
             if(creep.pos.x != containerPos.x || creep.pos.y != containerPos.y || creep.pos.roomName != containerPos.roomName)
             {
@@ -64,7 +68,10 @@ module.exports = {
                 }
                 else
                 {
-                    creep.build(constructionSite)
+                    if(creep.store[RESOURCE_ENERGY]>=25)
+                    {
+                        creep.build(constructionSite)
+                    }
                 }
             }
             else

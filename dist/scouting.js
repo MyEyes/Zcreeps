@@ -50,7 +50,7 @@ module.exports = {
             mining.createRoomMiningSpots(hostRoom, scoutRoom)
         }
         room = Game.rooms[scoutRoom]
-        if(room && room.controller)
+        if(room && room.controller && (room.controller.my || !room.controller.owner))
         {
             expansion.markRoomForReserve(hostRoom, scoutRoom)
         }

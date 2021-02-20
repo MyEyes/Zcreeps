@@ -1,10 +1,15 @@
 const room = require("room")
+const accounting = require("accounting")
 module.exports = {
     body: function(roomO)
     {
         if(roomO.energyCapacityAvailable >= 1200)
         {
             return [WORK,CARRY,CARRY,MOVE,MOVE,WORK,CARRY,CARRY,MOVE,MOVE,WORK,CARRY,CARRY,MOVE,MOVE,WORK,CARRY,CARRY,MOVE,MOVE]
+        }
+        if(accounting.getRecentMaxEnergy(roomO.name) >= 600)
+        {
+            return [WORK,CARRY,CARRY,MOVE,MOVE, WORK,CARRY,CARRY,MOVE,MOVE]
         }
         return [WORK,CARRY,CARRY,MOVE,MOVE]
     },
@@ -17,7 +22,7 @@ module.exports = {
         }
         if(!creep.memory.delivering)
         {
-            if(creep.room.storage)
+            if(creep.room.storage && creep.room.storage.store[RESOURCE_ENERGY]>10000)
             {
                 result = creep.withdraw(creep.room.storage, RESOURCE_ENERGY)
                 if(result == ERR_NOT_IN_RANGE)
@@ -52,9 +57,10 @@ module.exports = {
                 const target = Game.getObjectById(creep.memory.targetSourceId)
                 if(target)
                 {
+                    creep.moveTo(new RoomPosition(spot.x, spot.y, creep.memory.home));
                     if(creep.harvest(target) == ERR_NOT_IN_RANGE)
                     {
-                        creep.moveTo(new RoomPosition(spot.x, spot.y, creep.memory.home));
+                        
                     }
                 }
                 

@@ -1,22 +1,22 @@
-workerRole = require("roleWorker")
-builderRole = require("roleBuilder")
-extensionSupplierRole = require("roleExtensionSupplier")
-minerRole = require("roleMiner")
-haulerRole = require("roleHauler")
-upgraderRole = require("roleUpgrader")
-supplierRole = require("roleSupplier")
-scoutRole = require("roleScout")
-reserverRole = require("roleReserver")
-expanderRole = require("roleExpander")
+const workerRole = require("roleWorker")
+const builderRole = require("roleBuilder")
+const extensionSupplierRole = require("roleExtensionSupplier")
+const minerRole = require("roleMiner")
+const haulerRole = require("roleHauler")
+const upgraderRole = require("roleUpgrader")
+const supplierRole = require("roleSupplier")
+const scoutRole = require("roleScout")
+const reserverRole = require("roleReserver")
+const expanderRole = require("roleExpander")
 module.exports = {
     'worker': workerRole,
-    'builder': builderRole,
     'extSupplier': extensionSupplierRole,
+    'supplier': supplierRole,
     'miner': minerRole,
     'hauler': haulerRole,
+    'builder': builderRole,
     'upgrader': upgraderRole,
-    'supplier': supplierRole,
+    "expander": expanderRole,
     'scout': scoutRole,
     'reserver': reserverRole,
-    "expander": expanderRole
 }

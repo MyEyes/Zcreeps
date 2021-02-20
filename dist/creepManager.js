@@ -1,4 +1,5 @@
 accounting = require("accounting")
+mining = require("mining")
 module.exports = {
     run: function()
     {
@@ -13,11 +14,21 @@ module.exports = {
     manageRoomCreeps: function(roomName)
     {
         room = Game.rooms[roomName]
+        numConstructionSites = room.find(FIND_CONSTRUCTION_SITES).length
         if(room.storage)
         {
+            accounting.setRoleNeeded(roomName, "builder", Math.floor(Math.min((numConstructionSites+4)/5, 3)))
             if(Memory.rooms[roomName].miningSpots)
             {
-                accounting.setRoleNeeded(roomName, "worker", 0)
+                
+                if(accounting.getRecentMaxEnergy(roomName)<1000)
+                {
+                    accounting.setRoleNeeded(roomName, "worker", 1)
+                }
+                else
+                {
+                    accounting.setRoleNeeded(roomName, "worker", 0)
+                }
                 accounting.setRoleNeeded(roomName, "extSupplier", 1)
                 accounting.setRoleNeeded(roomName, "supplier", 1)
                 accounting.setRoleNeeded(roomName, "scout", 1)
@@ -25,6 +36,13 @@ module.exports = {
                 accounting.setRoleNeeded(roomName, "miner", numSpots)
                 accounting.setRoleNeeded(roomName, "hauler", numSpots)
                 accounting.setRoleNeeded(roomName, "upgrader", Math.floor(room.storage.store[RESOURCE_ENERGY]/100000)+1)
+            }
+            else
+            {
+                if(room.storage.store[RESOURCE_ENERGY] > 20000)
+                {
+                    mining.createRoomMiningSpots(roomName, roomName)
+                }
             }
         }
         else
@@ -37,6 +55,7 @@ module.exports = {
                     numSpots += Memory.rooms[roomName].sources[source].spots.length
                 }
                 accounting.setRoleNeeded(roomName, "worker", numSpots*2)
+                accounting.setRoleNeeded(roomName, "builder", Math.floor(Math.min((numConstructionSites+4)/5, 3)))
                 accounting.setRoleNeeded(roomName, "extSupplier", 0)
                 accounting.setRoleNeeded(roomName, "supplier", 0)
                 accounting.setRoleNeeded(roomName, "miner", 0)
@@ -51,6 +70,7 @@ module.exports = {
                 {
                     numSpots += Memory.rooms[roomName].sources[source].spots.length
                 }
+                accounting.setRoleNeeded(roomName, "builder", numSpots*2)
                 accounting.setRoleNeeded(roomName, "worker", 0)
                 accounting.setRoleNeeded(roomName, "extSupplier", 0)
                 accounting.setRoleNeeded(roomName, "supplier", 0)

@@ -26,9 +26,9 @@ room = {
     },
     addSourceEntries: function(room)
     {
-        data = Memory.rooms[room.name]
+        var data = Memory.rooms[room.name]
         data.sources = {}
-        sources = room.find(FIND_SOURCES)
+        var sources = room.find(FIND_SOURCES)
         const terrain = room.getTerrain()
         for(sourceIdx in sources)
         {

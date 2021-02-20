@@ -4,7 +4,7 @@ room = require("room")
 module.exports = {
     body: function(room)
     {
-        return [MOVE,MOVE,CLAIM, CLAIM]
+        return [MOVE,CLAIM,]
     },
     run: function(creep)
     {

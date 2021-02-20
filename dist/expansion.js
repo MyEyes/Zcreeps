@@ -1,4 +1,4 @@
-accounting = require("accounting")
+const accounting = require("accounting")
 const room = require("room")
 module.exports = {
     run: function()

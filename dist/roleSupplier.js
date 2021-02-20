@@ -1,7 +1,7 @@
 module.exports = {
     body: function(room)
     {
-        return [CARRY,CARRY,MOVE,MOVE,CARRY,CARRY,MOVE,MOVE]
+        return [CARRY,CARRY,MOVE,MOVE,CARRY,CARRY,MOVE,MOVE,CARRY,CARRY,MOVE,MOVE,CARRY,CARRY,MOVE,MOVE]
     },
     run: function()
     {

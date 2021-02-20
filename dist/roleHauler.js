@@ -19,14 +19,17 @@ module.exports = {
         if(!creep.memory.spot)
         {
             spot = mining.getFreeHaulingSpot(creep.memory.home)
-            if(mining.acquireHaulingSpot(creep.memory.home, spot, creep.name))
+            if(spot && mining.acquireHaulingSpot(creep.memory.home, spot, creep.name))
             {
                 creep.memory.spot = spot
-                return
             }
+            return
         }
-        spotInfo = mining.getSpotInfo(creep.memory.home, creep.memory.spot)
-
+        var spotInfo = mining.getSpotInfo(creep.memory.home, creep.memory.spot)
+        if(!spotInfo)
+        {
+            return
+        }
         if(!creep.memory.delivering)
         {
             targetPos = new RoomPosition(spotInfo.containerPos.x,spotInfo.containerPos.y,spotInfo.containerPos.roomName)
