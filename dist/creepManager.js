@@ -1,5 +1,6 @@
-accounting = require("accounting")
-mining = require("mining")
+const accounting = require("accounting")
+const mining = require("mining")
+const mineralMining = require("mineralMining")
 module.exports = {
     run: function()
     {
@@ -13,7 +14,7 @@ module.exports = {
     },
     manageRoomCreeps: function(roomName)
     {
-        room = Game.rooms[roomName]
+        var room = Game.rooms[roomName]
         numConstructionSites = room.find(FIND_CONSTRUCTION_SITES).length
         if(room.storage)
         {
@@ -36,6 +37,19 @@ module.exports = {
                 accounting.setRoleNeeded(roomName, "miner", numSpots)
                 accounting.setRoleNeeded(roomName, "hauler", numSpots)
                 accounting.setRoleNeeded(roomName, "upgrader", Math.floor(room.storage.store[RESOURCE_ENERGY]/100000)+1)
+                if(room.controller.level >= 6)
+                {
+                    if(Memory.rooms[roomName].mineralSpots && Object.keys(Memory.rooms[roomName].mineralSpots).length>0)
+                    {
+                        spotCount = mineralMining.getActiveMines(roomName)
+                        accounting.setRoleNeeded(roomName, "mineralMiner", spotCount)
+                        accounting.setRoleNeeded(roomName, "mineralHauler", spotCount)
+                    }
+                    else
+                    {
+                        mineralMining.createRoomMineralSpots(roomName, roomName)
+                    }
+                }
             }
             else
             {

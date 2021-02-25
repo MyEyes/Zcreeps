@@ -8,12 +8,16 @@ const supplierRole = require("roleSupplier")
 const scoutRole = require("roleScout")
 const reserverRole = require("roleReserver")
 const expanderRole = require("roleExpander")
+const mineralMinerRole = require("roleMineralMiner")
+const mineralHaulerRole = require("roleMineralHauler")
 module.exports = {
     'worker': workerRole,
     'extSupplier': extensionSupplierRole,
     'supplier': supplierRole,
     'miner': minerRole,
     'hauler': haulerRole,
+    'mineralMiner': mineralMinerRole,
+    'mineralHauler': mineralHaulerRole,
     'builder': builderRole,
     'upgrader': upgraderRole,
     "expander": expanderRole,

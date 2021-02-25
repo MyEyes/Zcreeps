@@ -1,17 +1,8 @@
-const accounting = require("accounting")
-const mining = require("mining")
+accounting = require("accounting")
+mining = require("mineralMining")
 module.exports = {
     body: function(room)
     {
-        if(room.energyCapacityAvailable >= 2000)
-        {
-            return [CARRY,CARRY,MOVE,MOVE,CARRY,CARRY,MOVE,MOVE,CARRY,CARRY,MOVE,MOVE,CARRY,CARRY,MOVE,MOVE,CARRY,CARRY,MOVE,MOVE,
-                    CARRY,CARRY,MOVE,MOVE,CARRY,CARRY,MOVE,MOVE,CARRY,CARRY,MOVE,MOVE,CARRY,CARRY,MOVE,MOVE,CARRY,CARRY,MOVE,MOVE]
-        }
-        if(room.energyCapacityAvailable >= 1000)
-        {
-            return [CARRY,CARRY,MOVE,MOVE,CARRY,CARRY,MOVE,MOVE,CARRY,CARRY,MOVE,MOVE,CARRY,CARRY,MOVE,MOVE,CARRY,CARRY,MOVE,MOVE]
-        }
         return [CARRY,CARRY,MOVE,MOVE,CARRY,CARRY,MOVE,MOVE,CARRY,CARRY,MOVE,MOVE]
     },
     run: function(creep)
@@ -39,7 +30,14 @@ module.exports = {
             {
                 return
             }
-            result = creep.withdraw(container, RESOURCE_ENERGY)
+            var result = ERR_NOT_ENOUGH_RESOURCES
+            for(const resourceType in container.store) {
+                result = creep.withdraw(container, resourceType);
+                if(result == OK)
+                {
+                    break;
+                }
+            }
             if(result == OK || creep.store.getFreeCapacity() == 0 || result == ERR_NOT_ENOUGH_RESOURCES)
             {
                 creep.memory.delivering = true
@@ -52,9 +50,12 @@ module.exports = {
         else
         {
             creep.moveTo(Game.rooms[creep.memory.home].storage)
+            for(const resourceType in creep.store) {
+                creep.transfer(Game.rooms[creep.memory.home].storage, resourceType);
+            }
             creep.transfer(Game.rooms[creep.memory.home].storage, RESOURCE_ENERGY)
 
-            if(creep.store[RESOURCE_ENERGY] == 0)
+            if(creep.store.getUsedCapacity() == 0)
             {
                 creep.memory.delivering = undefined
             }
