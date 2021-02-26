@@ -3,7 +3,7 @@ module.exports = {
     {
         return [CARRY,CARRY,MOVE,MOVE,CARRY,CARRY,MOVE,MOVE,CARRY,CARRY,MOVE,MOVE,CARRY,CARRY,MOVE,MOVE]
     },
-    run: function()
+    run: function(creep)
     {
         if(!creep.memory.delivering)
         {
@@ -30,7 +30,7 @@ module.exports = {
             const target = creep.pos.findClosestByRange(FIND_MY_STRUCTURES, {
                 filter: function(structure) {
                     return ((structure.structureType == STRUCTURE_TOWER && structure.store.getFreeCapacity(RESOURCE_ENERGY) > 100)
-                        || (structure.structureType != STRUCTURE_TOWER && structure.structureType != STRUCTURE_STORAGE && structure.store && structure.store.getFreeCapacity(RESOURCE_ENERGY) > 0))
+                        || (structure.structureType != STRUCTURE_TOWER && structure.structureType != STRUCTURE_STORAGE && structure.structureType!=STRUCTURE_LINK && structure.structureType!=STRUCTURE_TERMINAL && structure.store && structure.store.getFreeCapacity(RESOURCE_ENERGY) > 0))
                      }
             });
             if(target)
@@ -39,6 +39,10 @@ module.exports = {
                 {
                     creep.moveTo(target);
                 }
+            }
+            else
+            {
+                creep.moveTo(creep.room.controller)
             }
 
             if(creep.store[RESOURCE_ENERGY] == 0)

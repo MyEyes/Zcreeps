@@ -3,7 +3,12 @@ const mining = require("mining")
 module.exports = {
     body: function(room)
     {
-        return [MOVE,MOVE,MOVE,MOVE,MOVE,CARRY,WORK,WORK,WORK,WORK,WORK]
+        var recentEnergy = accounting.getRecentMaxEnergy(roomO.name)
+        if(recentEnergy >= 800)
+        {
+            return [MOVE,MOVE,MOVE,MOVE,MOVE,CARRY,WORK,WORK,WORK,WORK,WORK]
+        }
+        return [MOVE,CARRY,WORK,WORK,WORK,WORK,WORK]
     },
     run: function(creep)
     {

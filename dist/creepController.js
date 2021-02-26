@@ -1,5 +1,5 @@
-roles = require("roles")
-accounting = require("accounting")
+const roles = require("roles")
+const accounting = require("accounting")
 
 module.exports=
 {

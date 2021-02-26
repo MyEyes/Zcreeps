@@ -7,6 +7,7 @@ const manager = require("creepManager")
 const scouting = require("scouting")
 const expansion = require("expansion")
 const architect = require("architect")
+const transfers = require("transfers")
 
 module.exports.loop = function()
 {
@@ -16,9 +17,7 @@ module.exports.loop = function()
     scouting.run()
     expansion.run()
     architect.run()
-    //extensionShape.drawShape(Game.rooms["W4N1"],35,7)
-    //extensionShape.drawShape(Game.rooms["W2S1"],28,4)
-    //expand to W4N1
+    transfers.run()
 
     for(spawnName in Game.spawns)
     {

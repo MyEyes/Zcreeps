@@ -50,6 +50,10 @@ module.exports = {
                         mineralMining.createRoomMineralSpots(roomName, roomName)
                     }
                 }
+                if(room.terminal)
+                {
+                    accounting.setRoleNeeded(roomName, "transferer", 1)
+                }
             }
             else
             {
