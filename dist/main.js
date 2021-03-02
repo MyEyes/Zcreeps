@@ -9,6 +9,7 @@ const expansion = require("expansion")
 const architect = require("architect")
 const transfers = require("transfers")
 const linkNetwork = require("linkNetwork")
+const globalResources = require("globalResources")
 
 module.exports.loop = function()
 {
@@ -20,6 +21,7 @@ module.exports.loop = function()
     architect.run()
     transfers.run()
     linkNetwork.run()
+    globalResources.run()
 
     for(spawnName in Game.spawns)
     {
