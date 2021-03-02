@@ -3,7 +3,7 @@ const mining = require("mining")
 module.exports = {
     body: function(room)
     {
-        var recentEnergy = accounting.getRecentMaxEnergy(roomO.name)
+        var recentEnergy = accounting.getRecentMaxEnergy(room.name)
         if(recentEnergy >= 800)
         {
             return [MOVE,MOVE,MOVE,MOVE,MOVE,CARRY,WORK,WORK,WORK,WORK,WORK]

@@ -23,7 +23,6 @@ module.exports = {
                 count += 1
             }
         }
-        console.log(count)
         return count
     },
 

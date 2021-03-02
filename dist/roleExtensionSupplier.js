@@ -1,4 +1,5 @@
-accounting = require("accounting")
+const accounting = require("accounting")
+const regenerate = require("regenerate")
 module.exports = {
     body: function(room)
     {
@@ -15,7 +16,10 @@ module.exports = {
     },
     run: function()
     {
-            
+        if(regenerate.run(creep, true))
+        {
+            return;
+        }
         if(creep.ticksToLive<10)
         {
             creep.moveTo(creep.room.storage)

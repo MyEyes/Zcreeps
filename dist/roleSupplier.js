@@ -42,7 +42,14 @@ module.exports = {
             }
             else
             {
-                creep.moveTo(creep.room.controller)
+                if(creep.store.getFreeCapacity(RESOURCE_ENERGY)>0)
+                {
+                    creep.memory.delivering = undefined
+                }
+                else if(creep.pos.getRangeTo(creep.room.controller)>5)
+                {
+                    creep.moveTo(creep.room.controller)
+                }
             }
 
             if(creep.store[RESOURCE_ENERGY] == 0)

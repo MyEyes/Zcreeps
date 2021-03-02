@@ -17,7 +17,14 @@ module.exports = {
                 accounting.setRoleNeeded(hostRoom, "expander", count)
                 accounting.setRoleNeeded(roomName, "builder", 5)
             }
-            accounting.setRoleNeeded(hostRoom, "reserver", Object.keys(Memory.rooms[hostRoom].expansion.reserve).length)
+            if(accounting.getRecentMaxEnergy(hostRoom)>1500)
+            {
+                accounting.setRoleNeeded(hostRoom, "reserver", Object.keys(Memory.rooms[hostRoom].expansion.reserve).length)
+            }
+            else
+            {
+                accounting.setRoleNeeded(hostRoom, "reserver", 0)
+            }
         }
     },
     checkInit: function(hostRoom)

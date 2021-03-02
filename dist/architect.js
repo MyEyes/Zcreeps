@@ -157,7 +157,6 @@ module.exports =
                 }
             }
         }
-        console.log(minX, minY)
         this.setCrystalPos(roomName, new RoomPosition(minX,minY,roomName))
     },
     setCrystalPos: function(roomName, pos)

@@ -24,7 +24,7 @@ module.exports = {
                 
                 if(accounting.getRecentMaxEnergy(roomName)<1000)
                 {
-                    accounting.setRoleNeeded(roomName, "worker", 1)
+                    accounting.setRoleNeeded(roomName, "worker", 4)
                 }
                 else
                 {
@@ -37,6 +37,20 @@ module.exports = {
                 accounting.setRoleNeeded(roomName, "miner", numSpots)
                 accounting.setRoleNeeded(roomName, "hauler", numSpots)
                 accounting.setRoleNeeded(roomName, "upgrader", Math.floor(room.storage.store[RESOURCE_ENERGY]/100000)+1)
+                if(accounting.getRecentMaxEnergy(roomName)<600)
+                {
+                    accounting.setRoleNeeded(roomName, "extSupplier", 1)
+                    accounting.setRoleNeeded(roomName, "miner", 2)
+                    accounting.setRoleNeeded(roomName, "hauler", 2)
+                    accounting.setRoleNeeded(roomName, "scout", 0)
+                    accounting.setRoleNeeded(roomName, "supplier", 1)
+                    accounting.setRoleNeeded(roomName, "upgrader", 0)
+                    accounting.setRoleNeeded(roomName, "reserver", 0)
+                }
+                if(room.controller.level >= 5)
+                {
+                    accounting.setRoleNeeded(roomName, "transferer", 1)
+                }
                 if(room.controller.level >= 6)
                 {
                     if(Memory.rooms[roomName].mineralSpots && Object.keys(Memory.rooms[roomName].mineralSpots).length>0)
@@ -50,9 +64,10 @@ module.exports = {
                         mineralMining.createRoomMineralSpots(roomName, roomName)
                     }
                 }
-                if(room.terminal)
+                //If room is level 8 we can't upgrade arbitrarily fast
+                if(room.controller.level == 8)
                 {
-                    accounting.setRoleNeeded(roomName, "transferer", 1)
+                    accounting.setRoleNeeded(roomName, "upgrader", Math.min(4,Math.floor(room.storage.store[RESOURCE_ENERGY]/100000)+1))
                 }
             }
             else

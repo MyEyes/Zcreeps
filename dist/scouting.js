@@ -37,13 +37,13 @@ module.exports = {
             }
         }
     },
-    tagRoom: function(hostRoom, scoutRoom)
+    tagRoom: function(hostRoom, scoutRoom, bonus=0)
     {
         if(!Memory.rooms[hostRoom].scouting[scoutRoom])
         {
             return
         }
-        Memory.rooms[hostRoom].scouting[scoutRoom].lastVisit = Game.time
+        Memory.rooms[hostRoom].scouting[scoutRoom].lastVisit = Game.time+bonus
         if(!Memory.rooms[hostRoom].scouting[scoutRoom].checkedMines)
         {
             Memory.rooms[hostRoom].scouting[scoutRoom].checkedMines = true

@@ -19,7 +19,10 @@ module.exports = {
         var spotInfo = mining.getSpotInfo(creep.memory.home, creep.memory.spot)
         if(!spotInfo)
         {
-            creep.moveTo(creep.room.controller)
+            if(creep.pos.getRangeTo(creep.room.controller)>5)
+            {
+                creep.moveTo(creep.room.controller)
+            }
             return
         }
         if(!creep.memory.delivering)
@@ -29,7 +32,10 @@ module.exports = {
             container = Game.getObjectById(spotInfo.containerID)
             if(!container)
             {
-                creep.moveTo(creep.room.controller)
+                if(creep.pos.getRangeTo(creep.room.controller)>5)
+                {
+                    creep.moveTo(creep.room.controller)
+                }
                 return
             }
             var result = ERR_NOT_ENOUGH_RESOURCES
