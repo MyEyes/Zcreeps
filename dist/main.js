@@ -14,14 +14,14 @@ const globalResources = require("globalResources")
 module.exports.loop = function()
 {
     accounting.run()
+    globalResources.run()
     turrets.run()
     manager.run()
     scouting.run()
     expansion.run()
     architect.run()
-    transfers.run()
     linkNetwork.run()
-    globalResources.run()
+    transfers.run()
 
     for(spawnName in Game.spawns)
     {

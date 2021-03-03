@@ -1,6 +1,7 @@
 const linkNetwork = require("linkNetwork")
 const accounting = require("accounting")
 const regenerate = require("regenerate")
+const transfers = require("transfers")
 module.exports = {
     body: function(room)
     {
@@ -10,6 +11,18 @@ module.exports = {
             return [MOVE,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY]
         }
         return [MOVE,CARRY,CARRY,CARRY,CARRY,CARRY]
+    },
+    emptyExcept: function(creep, exceptType)
+    {
+        for(resourceType in creep.store)
+        {
+            if(resourceType != exceptType)
+            {
+                creep.transfer(creep.room.storage, resourceType)
+                return true
+            }
+        }
+        return false
     },
     run: function(creep)
     {
@@ -37,6 +50,10 @@ module.exports = {
                     {
                         if(mainLink.store.getFreeCapacity(RESOURCE_ENERGY)>0)
                         {
+                            if(this.emptyExcept(creep, RESOURCE_ENERGY))
+                            {
+                                return
+                            }
                             creep.withdraw(creep.room.storage, RESOURCE_ENERGY)
                             creep.transfer(mainLink, RESOURCE_ENERGY)
                             return
@@ -49,6 +66,10 @@ module.exports = {
                     }
                     else if(mainLink.store[RESOURCE_ENERGY]>0)
                     {
+                        if(this.emptyExcept(creep, RESOURCE_ENERGY))
+                        {
+                            return
+                        }
                         creep.withdraw(mainLink, RESOURCE_ENERGY)
                         creep.transfer(creep.room.storage, RESOURCE_ENERGY)
                         return
@@ -58,6 +79,10 @@ module.exports = {
                 {
                     if(mainLink.store[RESOURCE_ENERGY]>0)
                     {
+                        if(this.emptyExcept(creep, RESOURCE_ENERGY))
+                        {
+                            return
+                        }
                         creep.withdraw(mainLink, RESOURCE_ENERGY)
                         creep.transfer(creep.room.storage, RESOURCE_ENERGY)
                         return 
@@ -73,6 +98,10 @@ module.exports = {
                     {
                         if(extension.store.getFreeCapacity(RESOURCE_ENERGY)>0)
                         {
+                            if(this.emptyExcept(creep, RESOURCE_ENERGY))
+                            {
+                                return
+                            }
                             creep.withdraw(creep.room.storage, RESOURCE_ENERGY)
                             creep.transfer(extension, RESOURCE_ENERGY)
                             return
@@ -82,15 +111,61 @@ module.exports = {
             }
             if(creep.room.terminal)
             {
-                if(creep.room.terminal.store[RESOURCE_ENERGY]>100000)
+                currentTransfer = transfers.getCurrentTransfer(creep.memory.home)
+                
+                for(resourceType in creep.room.terminal.store)
                 {
-                    creep.withdraw(creep.room.terminal, RESOURCE_ENERGY)
-                    creep.transfer(creep.room.storage, RESOURCE_ENERGY)
+                    if(resourceType!=RESOURCE_ENERGY && currentTransfer && resourceType != currentTransfer.resourceType)
+                    {
+                        if(this.emptyExcept(creep, resourceType))
+                        {
+                            return
+                        }
+                        creep.withdraw(creep.room.terminal, resourceType)
+                        creep.transfer(creep.room.storage, resourceType)    
+                        return
+                    }
                 }
-                else if (creep.room.terminal.store[RESOURCE_ENERGY]<95000 && creep.room.storage.store[RESOURCE_ENERGY]>100000)
+                if(!currentTransfer || currentTransfer.resourceType!=RESOURCE_ENERGY)
                 {
-                    creep.withdraw(creep.room.storage, RESOURCE_ENERGY)
-                    creep.transfer(creep.room.terminal, RESOURCE_ENERGY)
+                    if(creep.room.terminal.store[RESOURCE_ENERGY]>100000)
+                    {
+                        if(this.emptyExcept(creep, RESOURCE_ENERGY))
+                        {
+                            return
+                        }
+                        creep.withdraw(creep.room.terminal, RESOURCE_ENERGY)
+                        creep.transfer(creep.room.storage, RESOURCE_ENERGY)
+                        return
+                    }
+                    else if (creep.room.terminal.store.getFreeCapacity(RESOURCE_ENERGY)>800 && creep.room.terminal.store[RESOURCE_ENERGY]<95000 && creep.room.storage.store[RESOURCE_ENERGY]>100000)
+                    {
+                        if(this.emptyExcept(creep, RESOURCE_ENERGY))
+                        {
+                            return
+                        }
+                        creep.withdraw(creep.room.storage, RESOURCE_ENERGY)
+                        creep.transfer(creep.room.terminal, RESOURCE_ENERGY)
+                        return
+                    }
+                }
+                if(currentTransfer)
+                {
+                    var targetAmount = 50000
+                    if(currentTransfer.resourceType == RESOURCE_ENERGY)
+                    {
+                        targetAmount = 150000
+                    }
+                    if(creep.room.terminal.store[currentTransfer.resourceType]<targetAmount)
+                    {
+                        if(this.emptyExcept(creep, currentTransfer.resourceType))
+                        {
+                            return
+                        }
+                        creep.withdraw(creep.room.storage, currentTransfer.resourceType)
+                        creep.transfer(creep.room.terminal, currentTransfer.resourceType)
+                        return
+                    }
                 }
             }
         }

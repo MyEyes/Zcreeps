@@ -1,13 +1,16 @@
-const roles = require("./roles");
-
+const globalResources = require("globalResources")
 module.exports = 
 {
     globalInit: function()
     {
-        Memory.transfers = {}
+        if(!Memory.transfers)
+        {
+            Memory.transfers = {}
+        }
     },
     run: function()
     {
+        this.globalInit()
         for(roomName in Memory.rooms)
         {
             this.runRoom(roomName)
@@ -20,32 +23,60 @@ module.exports =
         {
             return
         }
-        if(room.storage.store[RESOURCE_ENERGY]<100000)
+        currentTransfer = this.getCurrentTransfer(roomName)
+        for(resource in Memory.totalResources)
         {
-            requestId = this.getRequestForResource(roomName, RESOURCE_ENERGY)
-            if(!requestId)
+            diff = room.storage.store[resource]+room.terminal.store[resource]-globalResources.getAverage(resource)
+            percentage = diff/globalResources.getAverage(resource)
+            if(percentage && percentage<-0.1)
             {
-
-            }
-            else
-            {
-                this.updateRequest(requestId, 100000-room.storage.store[RESOURCE_ENERGY])
-            }
-        }
-        else
-        {
-            for(requestId in Memory.transfers)
-            {
-                requestInfo = Memory.transfers[requestId]
-                if(room.terminal.store[requestInfo.resourceType]>0)
+                requestId = this.getRequestForResource(roomName, resource)
+                if(!requestId)
                 {
-                    if(this.sendToRequest(room.terminal, requestId, room.terminal.store[requestInfo.resourceType]))
+                    this.createRequest(roomName, resource, -diff)
+                }
+                else
+                {
+                    this.updateRequest(requestId, -diff)
+                }
+            }
+            if(diff>0 && !currentTransfer)
+            {
+                for(requestId in Memory.transfers)
+                {
+                    requestInfo = Memory.transfers[requestId]
+                    if(requestInfo && requestInfo.resourceType == resource)
                     {
-                        break;
+                        this.setCurrentTransfer(roomName, requestId)
                     }
                 }
             }
         }
+        if(currentTransfer)
+        {
+            
+            amount = room.terminal.store[currentTransfer.resourceType]
+            if(currentTransfer.resourceType == RESOURCE_ENERGY)
+            {
+                amount -= 100000
+            }
+            if(amount>50000 || amount>currentTransfer.amount)
+            {
+                this.sendToRequest(room.terminal, Memory.rooms[roomName].currentTransfer, amount)
+            }
+        }
+    },
+    setCurrentTransfer(roomName, transferId)
+    {
+        Memory.rooms[roomName].currentTransfer = transferId
+    },
+    getCurrentTransfer(roomName)
+    {
+        if(!Memory.rooms[roomName].currentTransfer)
+        {
+            return undefined
+        }
+        return Memory.transfers[Memory.rooms[roomName].currentTransfer]
     },
     getRequestForResource: function(roomName, resourceType)
     {
@@ -56,6 +87,14 @@ module.exports =
             {
                 return transferId
             }
+        }
+    },
+    getRequestAmount: function(requestId)
+    {
+        transferInfo = Memory.transfers[transferId]
+        if(transferInfo)
+        {  
+            return transferInfo.amount
         }
     },
     createRequest: function(roomName, resourceType, amount)
