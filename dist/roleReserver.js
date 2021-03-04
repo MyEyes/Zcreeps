@@ -29,6 +29,13 @@ module.exports = {
             else
             {
                 creep.moveTo(room.controller)
+                if(room.controller.reservation)
+                {
+                    if(room.controller.reservation.username != "Firzen")
+                    {
+                        creep.attackController(room.controller)
+                    }
+                }
                 creep.reserveController(room.controller)
             }
         }
