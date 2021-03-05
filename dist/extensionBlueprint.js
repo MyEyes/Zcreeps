@@ -1,5 +1,9 @@
-data = 
+const data = 
 {
+    dimX: 11,
+    dimY: 11,
+    mainX: 5,
+    mainY: 5,
     structure_ids:{
         0: "empty",
         1: STRUCTURE_EXTENSION,
@@ -30,7 +34,7 @@ data =
         {
             for(j=0; j<11; j++)
             {
-                if(data.shape[j][i] === 1)
+                if(this.shape[j][i] === 1)
                 {
                     room.visual.circle(x+i,y+j)
                 }

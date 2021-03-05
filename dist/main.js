@@ -1,7 +1,6 @@
 const spawning = require("spawner")
 const controller = require("creepController")
 const accounting = require("accounting")
-const extensionShape = require("extensionShape")
 const turrets = require("turrets")
 const manager = require("creepManager")
 const scouting = require("scouting")
