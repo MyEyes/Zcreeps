@@ -1,5 +1,6 @@
 const room = require("room")
 const accounting = require("accounting")
+const boosting = require("boosting")
 module.exports = {
     body: function(roomO)
     {
@@ -15,6 +16,10 @@ module.exports = {
     },
     run: function()
     {
+        if(!boosting.boostParts(creep, CARRY, "capacity"))
+        {
+            return
+        }
         if(creep.pos.roomName != creep.memory.home)
         {
             creep.moveTo(new RoomPosition(25,25, creep.memory.home))

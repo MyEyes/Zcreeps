@@ -83,6 +83,10 @@ module.exports =
         for(transferId in Memory.transfers)
         {
             transferInfo = Memory.transfers[transferId]
+            if(!transferInfo)
+            {
+                continue
+            }
             if(transferInfo.roomName == roomName && transferInfo.resourceType == resourceType)
             {
                 return transferId

@@ -13,5 +13,18 @@ module.exports = {
             }
         }
         return spots
+    },
+    getStructureIdAt: function(room, x, y, structureType)
+    {
+        var structures=room.lookForAt(LOOK_STRUCTURES, x, y)
+        for(var structureIdx in structures)
+        {
+            var structure = structures[structureIdx]
+            if(structure.structureType == structureType)
+            {
+                return structure.id
+            }
+        }
+        return null
     }
 }

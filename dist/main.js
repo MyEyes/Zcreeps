@@ -10,6 +10,7 @@ const transfers = require("transfers")
 const linkNetwork = require("linkNetwork")
 const globalResources = require("globalResources")
 const enemyScouting = require("enemyScouting")
+const labs = require("labs")
 
 module.exports.loop = function()
 {
@@ -23,6 +24,7 @@ module.exports.loop = function()
     linkNetwork.run()
     transfers.run()
     enemyScouting.run()
+    labs.run()
 
     for(spawnName in Game.spawns)
     {
