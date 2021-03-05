@@ -100,22 +100,19 @@ module.exports = {
         for(producerIdx in labInfo.producers)
         {
             producerId = labInfo.producers[producerIdx]
-            producer = Game.getObjectById(producerId)
+            var producer = Game.getObjectById(producerId)
             if(!producer)
             {
                 continue
             }
-            if(producer.store.getFreeCapacity(RESOURCE_HYDROGEN)<2900)
+            for(resource in producer.store)
             {
-                creep.moveTo(producer)
-                for(resource in producer.store)
+                if(resource!=RESOURCE_ENERGY && producer.store.getFreeCapacity(resource)<2800)
                 {
-                    if(resource!=RESOURCE_ENERGY)
-                    {
-                        creep.withdraw(producer, resource)
-                        creep.transfer(container, resource)
-                        return
-                    }
+                    creep.moveTo(producer)
+                    creep.withdraw(producer, resource)
+                    creep.transfer(container, resource)
+                    return
                 }
             }
         }
