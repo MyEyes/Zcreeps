@@ -43,6 +43,12 @@ module.exports = {
         {
             return;
         }
+        var labInfo = labs.getLabInfo(creep.memory.home)
+        if(labInfo.reset)
+        {
+            this.runReset(creep)
+            return
+        }
         var container = labs.getContainer(creep.memory.home)
         var reaction = labs.getReaction(creep.memory.home)
         var boost1 = labs.getBoost1(creep.memory.home)
@@ -186,6 +192,24 @@ module.exports = {
                     creep.memory.state = "fetching"
                 }
             }
+        }
+    },
+    runReset: function(creep)
+    {
+        if(creep.store.getUsedCapacity()>0)
+        {
+            creep.moveTo(creep.room.storage)
+            for(resource in creep.store)
+            {
+                creep.transfer(creep.room.storage, resource)
+            }
+            return
+        }
+        var container = labs.getContainer(creep.memory.home)
+        creep.moveTo(container)
+        for(resource in container.store)
+        {
+            creep.withdraw(container, resource)
         }
     }
 }

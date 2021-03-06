@@ -51,6 +51,11 @@ module.exports =
         }
         else
         {
+            if(Memory.rooms[roomName].lab.reset)
+            {
+                this.runReset(roomName)
+                return
+            }
             sourceLab1 = Game.getObjectById(Memory.rooms[roomName].lab.source1)
             sourceLab2 = Game.getObjectById(Memory.rooms[roomName].lab.source2)
             for(labIdx in Memory.rooms[roomName].lab.producers)
@@ -63,15 +68,116 @@ module.exports =
     },
     decideReaction(roomName)
     {
-        Memory.rooms[roomName].lab.reaction = {}
-        Memory.rooms[roomName].lab.reaction.chem1 = RESOURCE_HYDROGEN
-        Memory.rooms[roomName].lab.reaction.chem2 = RESOURCE_KEANIUM
+        this.setReaction(roomName, RESOURCE_HYDROGEN, RESOURCE_KEANIUM)
     },
-    getContainer(roomName)
+    setReaction(roomName, chem1, chem2)
+    {   
+        if(!Memory.rooms[roomName].lab.reaction)
+        {
+            Memory.rooms[roomName].lab.reaction = {}
+        }
+        if(chem1 === Memory.rooms[roomName].lab.reaction.chem1)
+        {
+            //If both chemicals are already set we do nothing
+            if(chem2 === Memory.rooms[roomName].lab.reaction.chem2)
+            {
+                return;
+            }
+            Memory.rooms[roomName].lab.reaction.chem2 = chem2
+            this.startReset(roomName,[Memory.rooms[roomName].lab.sourceLab1,Memory.rooms[roomName].lab.buff1,Memory.rooms[roomName].lab.buff2])
+            return
+        }
+        if(chem1 === Memory.rooms[roomName].lab.reaction.chem2)
+        {
+            if(chem2 === Memory.rooms[roomName].lab.reaction.chem1)
+            {
+                return;
+            }
+            Memory.rooms[roomName].lab.reaction.chem1 = chem2
+            this.startReset(roomName, [Memory.rooms[roomName].lab.sourceLab2, Memory.rooms[roomName].lab.buff1,Memory.rooms[roomName].lab.buff2])
+            return
+        }
+        //At this point chem1 matches neither, so we only need to check chem2
+        if(chem2 === Memory.rooms[roomName].lab.reaction.chem1)
+        {
+            Memory.rooms[roomName].lab.reaction.chem2 = chem1
+            this.startReset(roomName, [Memory.rooms[roomName].lab.sourceLab1, Memory.rooms[roomName].lab.buff1,Memory.rooms[roomName].lab.buff2])
+            return
+        }
+        if(chem2 === Memory.rooms[roomName].lab.reaction.chem2)
+        {
+            Memory.rooms[roomName].lab.reaction.chem1 = chem1
+            this.startReset(roomName, [Memory.rooms[roomName].lab.sourceLab2, Memory.rooms[roomName].lab.buff1,Memory.rooms[roomName].lab.buff2])
+            return
+        }
+        Memory.rooms[roomName].lab.reaction.chem1 = chem1
+        Memory.rooms[roomName].lab.reaction.chem2 = chem2
+        this.startReset(roomName, [Memory.rooms[roomName].lab.buff1,Memory.rooms[roomName].lab.buff2])
+    },
+    runReset: function(roomName)
+    {
+        if(!Memory.rooms[roomName].lab.reset)
+        {
+            return
+        }
+        
+        resetIdxs = Memory.rooms[roomName].lab.reset
+        done = true
+        for(resetIdx in resetIdxs)
+        {
+            var lab = Game.getObjectById(resetIdxs[resetIdx])
+            for(resource in lab.store)
+            {
+                if(resource != RESOURCE_ENERGY)
+                {
+                    lab.room.visual.circle(lab.pos.x, lab.pos.y,{fill:'red'})
+                    done = false
+                    break
+                }
+            }
+        }
+        if(done)
+        {
+            Memory.rooms[roomName].lab.reset = undefined
+        }
+    },
+    startReset: function(roomName, exceptions)
+    {
+        Memory.rooms[roomName].lab.reset = []
+        labInfo = Memory.rooms[roomName].lab
+        this.addToReset(roomName, exceptions, labInfo.source1)
+        this.addToReset(roomName, exceptions, labInfo.source2)
+        this.addToReset(roomName, exceptions, labInfo.buff1)
+        this.addToReset(roomName, exceptions, labInfo.buff2)
+        for(producerIdx in labInfo.producers)
+        {
+            producer = Game.getObjectById(labInfo.producers[producerIdx])
+            if(producer)
+            {
+                this.addToReset(roomName, exceptions, producer.id)
+            }
+        }
+    },
+    addToReset: function(roomName, exceptions, id)
+    {
+        if(!id)
+        {
+            return
+        }
+        for(var exceptionIdx in exceptions)
+        {
+            if(id == exceptions[exceptionIdx])
+            {
+                return
+            }
+        }
+        Memory.rooms[roomName].lab.reset.push(id)
+    },
+    getContainer: function(roomName)
     {
         return Game.getObjectById(Memory.rooms[roomName].lab.container)
     },
-    getReaction(roomName)
+    getReaction: function(roomName)
     {
         return Memory.rooms[roomName].lab.reaction
     },

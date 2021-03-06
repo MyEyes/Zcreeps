@@ -58,6 +58,11 @@ module.exports = {
             return
         }
         var labInfo = labs.getLabInfo(creep.memory.home)
+        if(labInfo.reset)
+        {
+            this.runReset(creep)
+            return
+        }
         var source1 = Game.getObjectById(labInfo.source1)
         var source2 = Game.getObjectById(labInfo.source2)
         //Todo, add code to empty incorrect resources out of sourceLabs
@@ -112,6 +117,37 @@ module.exports = {
                     creep.moveTo(producer)
                     creep.withdraw(producer, resource)
                     creep.transfer(container, resource)
+                    return
+                }
+            }
+        }
+    },
+    runReset: function(creep)
+    {
+        var container = labs.getContainer(creep.memory.home)
+        var labInfo = labs.getLabInfo(creep.memory.home)
+        if(creep.store.getUsedCapacity()>0)
+        {
+            creep.moveTo(container)
+            for(resource in creep.store)
+            {
+                creep.transfer(container,resource)
+            }
+            return
+        }
+        for(idx in labInfo.reset)
+        {
+            lab = Game.getObjectById(labInfo.reset[idx])
+            if(!lab)
+            {
+                continue
+            }
+            for(resource in lab.store)
+            {
+                if(resource != RESOURCE_ENERGY)
+                {
+                    creep.moveTo(lab)
+                    creep.withdraw(lab,resource)
                     return
                 }
             }
