@@ -12,10 +12,11 @@ module.exports =
         {
             return true
         }
-        boost1Ressource = labs.getBoost1Resource(creep.memory.home)
+        var roomName = creep.room.name
+        boost1Ressource = labs.getBoost1Resource(roomName)
         if(BOOSTS[partType] && BOOSTS[partType][boost1Ressource] && BOOSTS[partType][boost1Ressource][buffType])
         {
-            if(this.boostAt(creep, labs.getBoost1(creep.memory.home)))
+            if(this.boostAt(creep, labs.getBoost1(roomName)))
             {
                 creep.memory.boosted[partType] = true
             }
@@ -25,10 +26,10 @@ module.exports =
         {
             creep.memory.boosted[partType] = true
         }
-        boost2Ressource = labs.getBoost2Resource(creep.memory.home)
+        boost2Ressource = labs.getBoost2Resource(roomName)
         if(BOOSTS[partType] && BOOSTS[partType][boost2Ressource] && BOOSTS[partType][boost2Ressource][buffType])
         {
-            if(this.boostAt(creep, labs.getBoost2(creep.memory.home)))
+            if(this.boostAt(creep, labs.getBoost2(roomName)))
             {
                 creep.memory.boosted[partType] = true
             }

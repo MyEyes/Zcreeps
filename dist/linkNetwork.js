@@ -249,6 +249,7 @@ module.exports =
     },
     runRoomDeposits: function(roomName)
     {
+        this.initRoomNetwork(roomName)
         if(Memory.rooms[roomName].links.deposits)
         {
             mainLink = this.getMainLink(roomName)
