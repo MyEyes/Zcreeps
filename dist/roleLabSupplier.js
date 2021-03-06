@@ -64,7 +64,7 @@ module.exports = {
         }
         if(!creep.memory.state)
         {
-            creep.memory.state = "fetching"
+            creep.memory.state = "delivering"
         }
         if(creep.ticksToLive<100)
         {
@@ -104,13 +104,29 @@ module.exports = {
         }
         else if(creep.memory.state == "deliveringBoost")
         {
-            if(creep.store[labs.getBoost1Resource(creep.memory.home)]>0 && boost1.store.getFreeCapacity(labs.getBoost1Resource(creep.memory.home)>0))
+            var boost1Empty = true
+            for(resource in boost1.store)
+            {
+                if(resource!=RESOURCE_ENERGY)
+                {
+                    boost1Empty = false
+                }
+            }
+            var boost2Empty = true
+            for(resource in boost2.store)
+            {
+                if(resource!=RESOURCE_ENERGY)
+                {
+                    boost2Empty = false
+                }
+            }
+            if(creep.store[labs.getBoost1Resource(creep.memory.home)]>0 && (boost1Empty || boost1.store.getFreeCapacity(labs.getBoost1Resource(creep.memory.home))>0))
             {
                 creep.moveTo(boost1)
                 creep.transfer(boost1, labs.getBoost1Resource(creep.memory.home))
                 return
             }
-            if(creep.store[labs.getBoost2Resource(creep.memory.home)]>0 && boost2.store.getFreeCapacity(labs.getBoost2Resource(creep.memory.home)>0))
+            if(creep.store[labs.getBoost2Resource(creep.memory.home)]>0 && (boost2Empty || boost2.store.getFreeCapacity(labs.getBoost2Resource(creep.memory.home))>0))
             {
                 creep.moveTo(boost2)
                 creep.transfer(boost2, labs.getBoost2Resource(creep.memory.home))
@@ -179,7 +195,10 @@ module.exports = {
             {
                 for(resource in creep.store)
                 {
-                    creep.transfer(container, resource)
+                    if(resource == reaction.chem1 || resource == reaction.chem2)
+                    {
+                        creep.transfer(container, resource)
+                    }
                     return
                 }
             }
@@ -190,7 +209,10 @@ module.exports = {
                 {
                     if(resource != reaction.chem1 && resource!=reaction.chem2)
                     {
-                        creep.withdraw(container, resource)
+                        if(creep.withdraw(container, resource)==OK)
+                        {
+                            return
+                        }
                     }
                 }
                 creep.moveTo(labs.getLabPosition(creep.memory.home))

@@ -265,18 +265,45 @@ module.exports =
     },
     getBoost1Resource: function(roomName)
     {
-        return Memory.rooms[roomName].lab.boost1Resource
+        if(Memory.rooms[roomName].lab)
+        {
+            return Memory.rooms[roomName].lab.boost1Resource
+        }
     },
     getBoost2Resource: function(roomName)
     {
-        return Memory.rooms[roomName].lab.boost2Resource
+        if(Memory.rooms[roomName].lab)
+        {
+            return Memory.rooms[roomName].lab.boost2Resource
+        }
     },
     setBoost1Resource: function(roomName, res)
     {
-        Memory.rooms[roomName].lab.boost1Resource = res
+        if(Memory.rooms[roomName].lab.boost1Resource != res)
+        {
+            Memory.rooms[roomName].lab.boost1Resource = res
+            var labInfo = Memory.rooms[roomName].lab
+            exceptions = [labInfo.source1, labInfo.source2, labInfo.buff2]
+            for(producerIdx in labInfo.producers)
+            {
+                exceptions.push(labInfo.producers[producerIdx])
+            }
+            this.startReset(roomName,exceptions)
+        }
     },
     setBoost2Resource: function(roomName, res)
     {
         Memory.rooms[roomName].lab.boost2Resource = res
+        if(Memory.rooms[roomName].lab.boost2Resource != res)
+        {
+            Memory.rooms[roomName].lab.boost2Resource = res
+            var labInfo = Memory.rooms[roomName].lab
+            exceptions = [labInfo.source1, labInfo.source2, labInfo.buff1]
+            for(producerIdx in labInfo.producers)
+            {
+                exceptions.push(labInfo.producers[producerIdx])
+            }
+            this.startReset(roomName,exceptions)
+        }
     }
 }
