@@ -69,6 +69,7 @@ module.exports = {
         if(creep.ticksToLive<100)
         {
             creep.memory.state = "delivering"
+            creep.memory.delivered = false
         }
         if(creep.memory.state == "fetchingBoost")
         {
@@ -103,13 +104,13 @@ module.exports = {
         }
         else if(creep.memory.state == "deliveringBoost")
         {
-            if(creep.store[labs.getBoost1Resource(creep.memory.home)]>0)
+            if(creep.store[labs.getBoost1Resource(creep.memory.home)]>0 && boost1.store.getFreeCapacity(labs.getBoost1Resource(creep.memory.home)>0))
             {
                 creep.moveTo(boost1)
                 creep.transfer(boost1, labs.getBoost1Resource(creep.memory.home))
                 return
             }
-            if(creep.store[labs.getBoost2Resource(creep.memory.home)]>0)
+            if(creep.store[labs.getBoost2Resource(creep.memory.home)]>0 && boost2.store.getFreeCapacity(labs.getBoost2Resource(creep.memory.home)>0))
             {
                 creep.moveTo(boost2)
                 creep.transfer(boost2, labs.getBoost2Resource(creep.memory.home))
@@ -130,6 +131,14 @@ module.exports = {
                     creep.transfer(creep.room.storage, resource)
                     return
                 }
+            }
+            if(!creep.room.storage.store[reaction.chem2] || creep.room.storage.store[reaction.chem1]<500)
+            {
+                amount1 = 0
+            }
+            if(!creep.room.storage.store[reaction.chem2] || creep.room.storage.store[reaction.chem2]<500)
+            {
+                amount2 = 0
             }
             if((amount1<10 && amount2<10) || creep.store.getFreeCapacity()==0)
             {
@@ -191,6 +200,10 @@ module.exports = {
                 {
                     creep.memory.state = "fetching"
                 }
+            }
+            else
+            {
+                creep.suicide()
             }
         }
     },

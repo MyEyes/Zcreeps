@@ -43,7 +43,7 @@ module.exports = {
             labPos = container.pos
             if(creep.pos.x != labPos.x || creep.pos.y!=labPos.y)
             {
-                creep.moveTo(labPos)
+                creep.moveTo(labPos, {ignoreCreeps: true})
             }
             else
             {
