@@ -42,6 +42,12 @@ module.exports = {
                 }
                 return
             }
+            else
+            {
+                pos = new RoomPosition(creep.room.storage.pos.x-4, creep.room.storage.pos.y, creep.room.name)
+                creep.moveTo(pos)
+                return
+            }
         }
         const target = creep.room.storage
         if(creep.withdraw(target, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE)

@@ -46,9 +46,11 @@ module.exports = {
                 {
                     creep.memory.delivering = undefined
                 }
-                else if(creep.pos.getRangeTo(creep.room.controller)>5)
+                else
                 {
-                    creep.moveTo(creep.room.controller)
+                    pos = new RoomPosition(creep.room.storage.pos.x+4, creep.room.storage.pos.y, creep.room.name)
+                    creep.moveTo(pos)
+                    return
                 }
             }
 
